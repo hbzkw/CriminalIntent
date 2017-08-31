@@ -6,7 +6,7 @@ package com.zhongjiaxin.criminalintent.database;
 
 public class CrimeDbSchema {
     public static final class CrimeTable {
-        public static final String NAME = "crime";
+        public static final String NAME = "crimes";
 
         public static final class Cols{
             public static final String UUID = "uuid";
