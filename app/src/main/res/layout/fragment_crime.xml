@@ -6,44 +6,56 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+  <include layout="@layout/view_camera_and_title"
+      tools:layout_editor_absoluteY="0dp"
+      tools:layout_editor_absoluteX="0dp"
+      android:id="@+id/include" />
+
     <EditText
         android:id="@+id/crime_title"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="@string/crime_title_hint"
         android:inputType="text"
         android:text="Name"
         app:layout_constraintTop_toBottomOf="@+id/textView"
-        android:layout_marginLeft="16dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginStart="16dp" />
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintLeft_toRightOf="@+id/include"
+        android:layout_marginTop="0dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="@+id/textView"
+        app:layout_constraintHorizontal_bias="0.659" />
 
     <TextView
         android:id="@+id/textView"
         style="?android:listSeparatorTextViewStyle"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="39dp"
         android:text="@string/crime_title_label"
-        app:layout_constraintLeft_toLeftOf="@+id/crime_title"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_width="0dp"
-        android:layout_marginLeft="0dp"
         android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintLeft_toRightOf="@+id/include"
+        android:layout_marginLeft="8dp" />
 
     <TextView
         android:id="@+id/textView2"
         style="?android:listSeparatorTextViewStyle"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="21dp"
         android:text="@string/crime_details_label"
-        app:layout_constraintLeft_toLeftOf="@+id/textView"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/crime_title"
         android:layout_width="0dp"
-        android:layout_marginLeft="0dp"
         android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp" />
 
     <Button
         android:id="@+id/crime_date"
