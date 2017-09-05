@@ -1,19 +1,25 @@
 package com.zhongjiaxin.criminalintent;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.FileProvider;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -37,11 +43,13 @@ import java.util.UUID;
  */
 
 public class CrimeFragment extends Fragment {
+    private static String TAG = "CRIMEFRAGMENT";
     private static String ARG_CRIME_ID = "crime_id";
     private static String DIALOG_DATE = "DialogDate";
 
     private static final int REQUEST_CODE = 0;
     private static final int REQUEST_CONTACT = 1;//用于读取联系人
+
 
     private Crime mCrime;
     private EditText mTitleField;
@@ -53,6 +61,9 @@ public class CrimeFragment extends Fragment {
     private ImageView mPhotoView;
     private File mPhotoFile;
     private final int REQUEST_PHOTO = 2;
+
+    int viewWidth;
+    int viewHeight;
 
 
     public static CrimeFragment newInstance(UUID crimeId) {
@@ -80,6 +91,61 @@ public class CrimeFragment extends Fragment {
         mTitleField.setText(mCrime.getmTitle());
         mPhotoButton = (ImageButton) v.findViewById(R.id.crime_camera);
         mPhotoView = (ImageView) v.findViewById(R.id.crime_photo);
+
+        mPhotoView.post(new Runnable() {
+            @Override
+            public void run() {
+                //获得宽高
+                viewWidth = mPhotoView.getWidth();
+                viewHeight = mPhotoView.getHeight();
+                //获得宽高
+                viewWidth = mPhotoView.getWidth();
+                viewHeight = mPhotoView.getHeight();
+                updatePhotoView();
+                Log.e(TAG, "w");
+            }
+        });
+        //获得ViewTreeObserver
+//        final ViewTreeObserver observer = mPhotoView.getViewTreeObserver();
+        //注册观察者，监听变化
+//        mPhotoView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//            @Override
+//            public void onGlobalLayout() {
+//                if (mPhotoView.getViewTreeObserver().isAlive()) {
+//                    mPhotoView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+//                }
+//                //获得宽高
+//                viewWidth = mPhotoView.getWidth();
+//                viewHeight = mPhotoView.getHeight();
+//                Build.VERSION
+////                updatePhotoView();
+//                Log.e(TAG, "w");
+//                //判断ViewTreeObserver 是否alive，如果存活的话移除这个观察者
+//            }
+//        });
+//        observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+//            @Override
+//            public boolean onPreDraw() {
+//                if (observer.isAlive()) {
+//                    observer.removeOnPreDrawListener(this);
+//                }
+//                //获得宽高
+//                viewWidth = mPhotoView.getMeasuredWidth();
+//                viewHeight = mPhotoView.getMeasuredHeight();
+//                return true;
+//            }
+//        });
+
+        mPhotoView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Point size = new Point();
+                getActivity().getWindowManager().getDefaultDisplay()
+                        .getSize(size);
+                Log.e(TAG, "w" + size.x + " h:" + size.y);
+                Log.e(TAG, "2w" + viewWidth + " 2h:" + viewHeight);
+            }
+        });
 
         mTitleField.addTextChangedListener(new TextWatcher() {
             @Override
@@ -161,7 +227,8 @@ public class CrimeFragment extends Fragment {
         mPhotoButton.setEnabled(canTakePhoto);
 
         if (canTakePhoto) {
-            Uri uri = Uri.fromFile(mPhotoFile);
+            Uri uri = getUriForFile(getActivity(), mPhotoFile);
+//            Uri uri = Uri.fromFile(mPhotoFile);
             captureImage.putExtra(MediaStore.EXTRA_OUTPUT, uri);
         }
         mPhotoButton.setOnClickListener(new View.OnClickListener() {
@@ -172,9 +239,21 @@ public class CrimeFragment extends Fragment {
         });
 
 
-
         return v;
 //        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    private static Uri getUriForFile(Context context, File file) {
+        if (context == null || file == null) {
+            throw new NullPointerException();
+        }
+        Uri uri;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            uri = FileProvider.getUriForFile(context.getApplicationContext(), "com.zhongjiaxin.criminalintent.file_provider", file);
+        } else {
+            uri = Uri.fromFile(file);
+        }
+        return uri;
     }
 
     @Override
@@ -216,11 +295,9 @@ public class CrimeFragment extends Fragment {
                     .query(contactUri, queryFields, null, null, null);
 
             try {
-
                 if (c.getCount() == 0) {
                     return;
                 }
-
                 c.moveToFirst();
                 String suspect = c.getString(0);
                 mCrime.setmSuspect(suspect);
@@ -228,8 +305,8 @@ public class CrimeFragment extends Fragment {
             } finally {
                 c.close();
             }
-
-
+        } else if (requestCode == REQUEST_PHOTO) {
+            updatePhotoView();
         }
     }
 
@@ -256,6 +333,20 @@ public class CrimeFragment extends Fragment {
         String report = getString(R.string.crime_report,
                 mCrime.getmTitle(), dateString, solvedString, suspect);
         return report;
+    }
+
+    private void updatePhotoView() {
+        if (mPhotoFile == null || !mPhotoFile.exists()) {
+//            mPhotoView.setImageDrawable(null);
+        } else {
+            Log.e(TAG, mPhotoFile.getPath());
+//            Bitmap bitmap = PictureUtils.getScaledBitmap(
+//                    mPhotoFile.getPath(), getActivity());
+            Bitmap bitmap = PictureUtils.getScaledBitmap(
+                    mPhotoFile.getPath(), viewWidth, viewHeight);
+            mPhotoView.setImageBitmap(bitmap);
+        }
+
     }
 
     @Override
