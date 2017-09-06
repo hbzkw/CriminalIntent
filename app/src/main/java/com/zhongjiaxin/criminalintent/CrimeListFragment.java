@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -48,16 +47,18 @@ public class CrimeListFragment extends Fragment {
         view.findViewById(R.id.test_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(), "move!", Toast.LENGTH_SHORT).show();
-                mCrimeRecyclerView.getAdapter().notifyItemMoved(1, 5);//1和5替换位置
+//                Toast.makeText(getActivity(), "move!", Toast.LENGTH_SHORT).show();
+//                mCrimeRecyclerView.getAdapter().notifyItemMoved(1, 5);//1和5替换位置
+
+
             }
         });
 
-        Log.e(TAG, "oncreate"+ mSubtitleVisible);
+        Log.e(TAG, "oncreate" + mSubtitleVisible);
 
         if (savedInstanceState != null) {
             mSubtitleVisible = savedInstanceState.getBoolean(SAVED_SUBTITLE_VISIBLE);
-            Log.e(TAG, "oncreatein"+ mSubtitleVisible);
+            Log.e(TAG, "oncreatein" + mSubtitleVisible);
         }
         updateUI();
         return view;
@@ -136,7 +137,7 @@ public class CrimeListFragment extends Fragment {
             return mCrimes.size();
         }
 
-        public void setCrimes(List<Crime> crimes){
+        public void setCrimes(List<Crime> crimes) {
             mCrimes = crimes;
         }
     }
@@ -185,7 +186,7 @@ public class CrimeListFragment extends Fragment {
 //        @SuppressLint("StringFormatMatches")
 //        String subtitle = getString(R.string.subtitle_format, crimeCount);
         int crimeSize = crimeLab.getCrimes().size();
-        String subtitle = getResources().getQuantityString(R.plurals.subtitle_plural,crimeSize,crimeSize);//只在手机系统语言是英文环境下有效
+        String subtitle = getResources().getQuantityString(R.plurals.subtitle_plural, crimeSize, crimeSize);//只在手机系统语言是英文环境下有效
         if (!mSubtitleVisible) {
             subtitle = null;
         }
@@ -198,7 +199,7 @@ public class CrimeListFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        Log.e(TAG, "onSaveInstanceState"+ mSubtitleVisible);
+        Log.e(TAG, "onSaveInstanceState" + mSubtitleVisible);
         outState.putBoolean(SAVED_SUBTITLE_VISIBLE, mSubtitleVisible);
     }
 

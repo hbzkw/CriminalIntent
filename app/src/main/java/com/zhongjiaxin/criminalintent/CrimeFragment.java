@@ -306,7 +306,9 @@ public class CrimeFragment extends Fragment {
                 c.close();
             }
         } else if (requestCode == REQUEST_PHOTO) {
+
             updatePhotoView();
+
         }
     }
 
@@ -342,8 +344,15 @@ public class CrimeFragment extends Fragment {
             Log.e(TAG, mPhotoFile.getPath());
 //            Bitmap bitmap = PictureUtils.getScaledBitmap(
 //                    mPhotoFile.getPath(), getActivity());
+
             Bitmap bitmap = PictureUtils.getScaledBitmap(
                     mPhotoFile.getPath(), viewWidth, viewHeight);
+
+            Log.e(TAG, "result" + PictureUtils.readPictureDegree(mPhotoFile.getPath()));
+            if (PictureUtils.readPictureDegree(mPhotoFile.getPath()) != 0) {
+                bitmap = PictureUtils.rotateBitmapByDegree(bitmap, PictureUtils.readPictureDegree(mPhotoFile.getPath()));
+            }
+
             mPhotoView.setImageBitmap(bitmap);
         }
 
