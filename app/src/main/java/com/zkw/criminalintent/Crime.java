@@ -1,4 +1,4 @@
-package com.zhongjiaxin.criminalintent;
+package com.zkw.criminalintent;
 
 import java.util.Date;
 import java.util.UUID;

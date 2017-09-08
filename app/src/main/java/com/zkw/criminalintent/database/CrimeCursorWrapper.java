@@ -1,10 +1,10 @@
-package com.zhongjiaxin.criminalintent.database;
+package com.zkw.criminalintent.database;
 
 import android.database.Cursor;
 import android.database.CursorWrapper;
 
-import com.zhongjiaxin.criminalintent.Crime;
-import com.zhongjiaxin.criminalintent.database.CrimeDbSchema.CrimeTable;
+import com.zkw.criminalintent.Crime;
+import com.zkw.criminalintent.database.CrimeDbSchema.CrimeTable;
 
 import java.util.Date;
 import java.util.UUID;

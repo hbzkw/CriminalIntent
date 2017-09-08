@@ -1,4 +1,4 @@
-package com.zhongjiaxin.criminalintent;
+package com.zkw.criminalintent;
 
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;

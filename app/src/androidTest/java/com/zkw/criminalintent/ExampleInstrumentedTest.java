@@ -1,4 +1,4 @@
-package com.zhongjiaxin.criminalintent;
+package com.zkw.criminalintent;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

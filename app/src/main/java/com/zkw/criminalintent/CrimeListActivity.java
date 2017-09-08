@@ -1,4 +1,4 @@
-package com.zhongjiaxin.criminalintent;
+package com.zkw.criminalintent;
 
 import android.content.Intent;
 import android.support.v4.app.Fragment;

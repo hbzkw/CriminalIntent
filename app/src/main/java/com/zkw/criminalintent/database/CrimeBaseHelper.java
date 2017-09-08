@@ -1,10 +1,10 @@
-package com.zhongjiaxin.criminalintent.database;
+package com.zkw.criminalintent.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.zhongjiaxin.criminalintent.database.CrimeDbSchema.CrimeTable;
+import com.zkw.criminalintent.database.CrimeDbSchema.CrimeTable;
 
 /**
  * Created by zhaokaiwen on 2017/8/29.

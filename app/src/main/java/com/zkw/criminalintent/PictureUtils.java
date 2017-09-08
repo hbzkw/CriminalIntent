@@ -1,4 +1,4 @@
-package com.zhongjiaxin.criminalintent;
+package com.zkw.criminalintent;
 
 import android.app.Activity;
 import android.graphics.Bitmap;

@@ -1,4 +1,4 @@
-package com.zhongjiaxin.criminalintent.database;
+package com.zkw.criminalintent.database;
 
 /**
  * Created by zhaokaiwen on 2017/8/29.

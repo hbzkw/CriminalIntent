@@ -1,4 +1,4 @@
-package com.zhongjiaxin.criminalintent;
+package com.zkw.criminalintent;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -6,15 +6,15 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
 
-import com.zhongjiaxin.criminalintent.database.CrimeBaseHelper;
-import com.zhongjiaxin.criminalintent.database.CrimeCursorWrapper;
+import com.zkw.criminalintent.database.CrimeBaseHelper;
+import com.zkw.criminalintent.database.CrimeCursorWrapper;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static com.zhongjiaxin.criminalintent.database.CrimeDbSchema.CrimeTable;
+import static com.zkw.criminalintent.database.CrimeDbSchema.CrimeTable;
 
 /**
  * Created by zhaokaiwen on 2017/8/24.
