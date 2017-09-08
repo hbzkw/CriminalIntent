@@ -1,6 +1,6 @@
 package com.zhongjiaxin.criminalintent;
 
-import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,8 +16,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
+
 
 /**
  * Created by zhaokaiwen on 2017/8/24.
@@ -30,6 +32,22 @@ public class CrimeListFragment extends Fragment {
     private RecyclerView mCrimeRecyclerView;
     private CrimeAdapter mAdapter;
     private boolean mSubtitleVisible;
+    private Callbacks mCallBacks;
+
+
+    /**
+     * 必须的托管接口
+     */
+    public interface Callbacks {
+        void onCrimeSelected(Crime crime);
+    }
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mCallBacks = (Callbacks) context;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,9 +65,8 @@ public class CrimeListFragment extends Fragment {
         view.findViewById(R.id.test_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Toast.makeText(getActivity(), "move!", Toast.LENGTH_SHORT).show();
-//                mCrimeRecyclerView.getAdapter().notifyItemMoved(1, 5);//1和5替换位置
-
+                Toast.makeText(getActivity(), "move!", Toast.LENGTH_SHORT).show();
+                mCrimeRecyclerView.getAdapter().notifyItemMoved(1, 5);//1和5替换位置
 
             }
         });
@@ -64,7 +81,8 @@ public class CrimeListFragment extends Fragment {
         return view;
     }
 
-    private void updateUI() {
+
+    public void updateUI() {
         CrimeLab crimeLab = CrimeLab.get(getActivity());
         List<Crime> crimes = crimeLab.getCrimes();
 
@@ -104,8 +122,9 @@ public class CrimeListFragment extends Fragment {
         @Override
         public void onClick(View view) {
 //            Toast.makeText(getActivity(),mCrime.getmTitle()+"cliched!",Toast.LENGTH_SHORT).show();
-            Intent intent = CrimePagerActivity.newIntent(getActivity(), mCrime.getmId());
-            startActivity(intent);
+//            Intent intent = CrimePagerActivity.newIntent(getActivity(), mCrime.getmId());
+//            startActivity(intent);
+            mCallBacks.onCrimeSelected(mCrime);
 
         }
     }
@@ -167,8 +186,10 @@ public class CrimeListFragment extends Fragment {
             case R.id.menu_item_new_crime:
                 Crime crime = new Crime();
                 CrimeLab.get(getActivity()).addCrime(crime);
-                Intent intent = CrimePagerActivity.newIntent(getActivity(), crime.getmId());
-                startActivity(intent);
+//                Intent intent = CrimePagerActivity.newIntent(getActivity(), crime.getmId());
+//                startActivity(intent);
+                updateUI();
+                mCallBacks.onCrimeSelected(crime);
                 return true;
             case R.id.menu_item_show_subtitle:
                 mSubtitleVisible = !mSubtitleVisible;
@@ -203,4 +224,9 @@ public class CrimeListFragment extends Fragment {
         outState.putBoolean(SAVED_SUBTITLE_VISIBLE, mSubtitleVisible);
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallBacks = null;
+    }
 }

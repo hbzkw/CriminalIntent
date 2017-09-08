@@ -50,6 +50,11 @@ public class CrimeFragment extends Fragment {
     private static final int REQUEST_CODE = 0;
     private static final int REQUEST_CONTACT = 1;//用于读取联系人
 
+    private Callbacks mCallbacks;
+
+    public interface Callbacks {
+        void onCrimeUpdated(Crime crime);
+    }
 
     private Crime mCrime;
     private EditText mTitleField;
@@ -72,6 +77,12 @@ public class CrimeFragment extends Fragment {
         CrimeFragment fragment = new CrimeFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mCallbacks = (Callbacks) context;
     }
 
     @Override
@@ -156,6 +167,7 @@ public class CrimeFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 mCrime.setmTitle(charSequence.toString());
+                updateCrime();
             }
 
             @Override
@@ -182,6 +194,7 @@ public class CrimeFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 mCrime.setmSolved(b);
+                updateCrime();
             }
         });
 
@@ -285,7 +298,9 @@ public class CrimeFragment extends Fragment {
         if (requestCode == REQUEST_CODE) {
             Date date = (Date) data.getSerializableExtra(DatePackerFragment.EXTRA_DATE);
             mCrime.setmDate(date);
+            updateCrime();
             updateDate();
+
         } else if (requestCode == REQUEST_CONTACT && data != null) {
             Uri contactUri = data.getData();
             String[] queryFields = new String[]{
@@ -301,19 +316,22 @@ public class CrimeFragment extends Fragment {
                 c.moveToFirst();
                 String suspect = c.getString(0);
                 mCrime.setmSuspect(suspect);
+                updateCrime();
                 mSuspectButton.setText(suspect);
             } finally {
                 c.close();
             }
         } else if (requestCode == REQUEST_PHOTO) {
 
+            updateCrime();
             updatePhotoView();
 
         }
     }
 
-    private void updateDate() {
-        mDateButton.setText(mCrime.getmDate().toString());
+    private void updateCrime() {
+        CrimeLab.get(getActivity()).updateCrime(mCrime);
+        mCallbacks.onCrimeUpdated(mCrime);
     }
 
     private String getCrimeReport() {
@@ -335,6 +353,10 @@ public class CrimeFragment extends Fragment {
         String report = getString(R.string.crime_report,
                 mCrime.getmTitle(), dateString, solvedString, suspect);
         return report;
+    }
+
+    private void updateDate() {
+        mDateButton.setText(mCrime.getmDate().toString());
     }
 
     private void updatePhotoView() {
@@ -363,5 +385,11 @@ public class CrimeFragment extends Fragment {
         super.onPause();
 
         CrimeLab.get(getActivity()).updateCrime(mCrime);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallbacks = null;
     }
 }
